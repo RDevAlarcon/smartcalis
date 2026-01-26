@@ -1,36 +1,67 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# PrimeRep
+Entrena con criterio. Progresa con control.
 
-## Getting Started
+PrimeRep es una plataforma de calistenia con progresión real, diseñada para todas las edades con foco técnico y longevidad para usuarios +40 sin excluir a usuarios -40.
 
-First, run the development server:
+## Stack
+- Next.js (App Router) + TypeScript estricto
+- Tailwind CSS
+- PostgreSQL + Drizzle ORM
+- JWT con jose (cookie httpOnly)
+- Zod para validación
+- Vitest para pruebas core
+
+## Setup local
+
+1) Clona el repo y crea `.env`:
+```bash
+cp .env.example .env
+```
+
+2) Ajusta `DATABASE_URL` y `JWT_SECRET`.
+
+3) Instala dependencias:
+```bash
+npm install
+```
+
+## Migraciones + seed
+
+```bash
+npm run db:push
+npm run seed
+```
+
+## Desarrollo
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Tests
+```bash
+npm run test
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Deploy en Railway
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1) Crea un proyecto en Railway y conecta el repo.
+2) Añade `DATABASE_URL` y `JWT_SECRET` en Variables.
+3) Comando de build: `npm run build`
+4) Comando de start: `npm run start`
+5) Ejecuta una vez:
+```bash
+npm run db:push
+npm run seed
+```
 
-## Learn More
+## Heurísticas del planner
+- Split por días (2–6) con patrones PUSH/PULL/LEGS/CORE.
+- Volumen y descansos por objetivo, ajustados por ageBand.
+- Deload automático cada 4 semanas.
+- Si dolor reportado ≥5/10: se elimina el ejercicio 7 días y se reduce el volumen 30%.
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Scripts
+- `npm run db:generate`: genera migrations
+- `npm run db:push`: aplica schema a la DB
+- `npm run seed`: carga ejercicios y progresiones
