@@ -1,6 +1,13 @@
 import "dotenv/config";
 import { db } from "../src/db";
-import { exerciseProgressions, exercises } from "../src/db/schema";
+import {
+  exerciseProgressions,
+  exercises,
+  setLogs,
+  workoutItems,
+  workoutLogs,
+  workouts,
+} from "../src/db/schema";
 
 const mediaByPattern: Record<
   SeedExercise["pattern"],
@@ -344,6 +351,10 @@ const progressions = [
 ];
 
 async function run() {
+  await db.delete(setLogs);
+  await db.delete(workoutLogs);
+  await db.delete(workoutItems);
+  await db.delete(workouts);
   await db.delete(exerciseProgressions);
   await db.delete(exercises);
 

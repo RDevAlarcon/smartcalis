@@ -9,6 +9,8 @@ export const loginSchema = registerSchema;
 
 export const onboardingSchema = z.object({
   birthDate: z.string().datetime(),
+  heightCm: z.number().min(120).max(230),
+  weightKg: z.number().min(30).max(250),
   level: z.enum(["BEGINNER", "INTERMEDIATE", "ADVANCED"]),
   goal: z.enum(["FAT_LOSS", "STRENGTH", "HYPERTROPHY", "MOBILITY", "SKILL"]),
   daysPerWeek: z.number().min(2).max(6),

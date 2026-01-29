@@ -2,6 +2,7 @@ import {
   boolean,
   integer,
   jsonb,
+  numeric,
   pgEnum,
   pgTable,
   serial,
@@ -72,6 +73,8 @@ export const profiles = pgTable("profiles", {
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
   birthDate: timestamp("birth_date", { withTimezone: true }).notNull(),
+  heightCm: integer("height_cm"),
+  weightKg: numeric("weight_kg", { precision: 5, scale: 1 }),
   ageBand: ageBandEnum("age_band").notNull(),
   level: levelEnum("level").notNull(),
   goal: goalEnum("goal").notNull(),

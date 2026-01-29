@@ -42,6 +42,10 @@ export async function POST(request: Request) {
   }
 
   const birthDate = new Date(parsed.data.birthDate);
+  const weightKg = Number(parsed.data.weightKg);
+  const weightValue = Number.isFinite(weightKg)
+    ? weightKg.toFixed(1)
+    : null;
   const ageBand = calculateAgeBand(birthDate);
   const trainingDays = normalizeTrainingDays(
     parsed.data.daysPerWeek,
@@ -58,6 +62,8 @@ export async function POST(request: Request) {
       .update(profiles)
       .set({
         birthDate,
+        heightCm: parsed.data.heightCm,
+        weightKg: weightValue,
         ageBand,
         level: parsed.data.level,
         goal: parsed.data.goal,
@@ -79,6 +85,8 @@ export async function POST(request: Request) {
     .values({
       userId,
       birthDate,
+      heightCm: parsed.data.heightCm,
+      weightKg: weightValue,
       ageBand,
       level: parsed.data.level,
       goal: parsed.data.goal,

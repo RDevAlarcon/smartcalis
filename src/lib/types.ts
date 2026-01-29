@@ -40,6 +40,8 @@ export type Injury =
 
 export type ProfileInput = {
   birthDate: string;
+  heightCm: number;
+  weightKg: number;
   level: Level;
   goal: Goal;
   daysPerWeek: number;

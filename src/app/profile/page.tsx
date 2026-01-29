@@ -1,9 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { bmiCategory, calculateBmi } from "@/lib/bmi";
 
 type Profile = {
   birthDate: string;
+  heightCm: number | null;
+  weightKg: number | string | null;
   ageBand: string;
   level: string;
   goal: string;
@@ -91,6 +94,24 @@ export default function ProfilePage() {
     (workout) => workout.weekIndex === currentWeekIndex,
   );
   const completedCount = currentWeekWorkouts.filter((w) => w.completed).length;
+  const age = useMemo(() => {
+    if (!profile?.birthDate) return null;
+    const birth = new Date(profile.birthDate);
+    const today = new Date();
+    let years = today.getFullYear() - birth.getFullYear();
+    const m = today.getMonth() - birth.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) {
+      years -= 1;
+    }
+    return years;
+  }, [profile?.birthDate]);
+  const bmiValue = useMemo(() => {
+    if (!profile?.weightKg || !profile?.heightCm) return null;
+    const weight = Number(profile.weightKg);
+    if (!Number.isFinite(weight)) return null;
+    return calculateBmi(weight, profile.heightCm);
+  }, [profile?.weightKg, profile?.heightCm]);
+  const bmiLabel = bmiValue !== null ? bmiCategory(bmiValue) : null;
 
   async function handleProfileSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -101,6 +122,8 @@ export default function ProfilePage() {
 
     const payload = {
       birthDate: new Date(String(form.get("birthDate"))).toISOString(),
+      heightCm: Number(form.get("heightCm")),
+      weightKg: Number(form.get("weightKg")),
       level: form.get("level"),
       goal: form.get("goal"),
       daysPerWeek: Number(form.get("daysPerWeek")),
@@ -242,6 +265,33 @@ export default function ProfilePage() {
 
               <div className="grid gap-4 md:grid-cols-2">
                 <label className="space-y-2 text-sm text-slate-200">
+                  Estatura (cm)
+                  <input
+                    name="heightCm"
+                    type="number"
+                    min={120}
+                    max={230}
+                    step={1}
+                    defaultValue={profile.heightCm ?? ""}
+                    className="w-full rounded-lg border border-slate-200/70 bg-white/95 px-3 py-2 text-slate-900"
+                  />
+                </label>
+                <label className="space-y-2 text-sm text-slate-200">
+                  Peso (kg)
+                  <input
+                    name="weightKg"
+                    type="number"
+                    min={30}
+                    max={250}
+                    step={0.1}
+                    defaultValue={profile.weightKg ?? ""}
+                    className="w-full rounded-lg border border-slate-200/70 bg-white/95 px-3 py-2 text-slate-900"
+                  />
+                </label>
+              </div>
+
+              <div className="grid gap-4 md:grid-cols-2">
+                <label className="space-y-2 text-sm text-slate-200">
                   Objetivo
                   <select
                     name="goal"
@@ -371,6 +421,21 @@ export default function ProfilePage() {
             <p className="text-sm text-slate-200">
               Adherencia objetivo: {profile?.daysPerWeek ?? 0} Días por semana.
             </p>
+            {bmiValue !== null && age !== null ? (
+              age >= 18 ? (
+                <p className="text-sm text-slate-200">
+                  IMC: {bmiValue} · {bmiLabel} (referencia OMS).
+                </p>
+              ) : (
+                <p className="text-sm text-slate-200">
+                  IMC: para menores se usan percentiles por edad.
+                </p>
+              )
+            ) : (
+              <p className="text-sm text-slate-200">
+                IMC: completa peso y estatura.
+              </p>
+            )}
           </div>
 
           <div className="rounded-xl border border-sky-200/60 bg-slate-950/35 p-6 text-slate-100 space-y-4">
