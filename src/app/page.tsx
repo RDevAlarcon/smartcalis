@@ -24,12 +24,12 @@ export default async function Home() {
           inLanguage: "es-ES",
         })}
       </Script>
-      <div className="absolute inset-0 bg-[url('/imagen1.png')] bg-cover bg-no-repeat bg-[position:70%_10%]" />
-      <div className="absolute inset-0 bg-slate-950/35" />
+      <div className="absolute inset-0 bg-[url('/imagen1.png')] bg-cover bg-no-repeat bg-[position:70%_center]" />
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(15,23,42,0.72),rgba(15,23,42,0.45),rgba(15,23,42,0.2))]" />
       <section className="relative min-h-[420px] md:min-h-[560px]">
         <div className="container relative py-20 text-slate-100">
           <div className="max-w-2xl space-y-6 rounded-3xl p-8">
-            <p className="text-sm uppercase tracking-[0.35em] text-sky-200">
+            <p className="text-sm font-semibold uppercase tracking-[0.35em] text-sky-200">
               SmartCalis
             </p>
             <h1 className="text-4xl font-semibold leading-tight text-[#e5e7eb] md:text-5xl">
@@ -50,9 +50,9 @@ export default async function Home() {
               {!hasSession && (
                 <a
                   href="/login"
-                  className="rounded-full border border-sky-200/70 px-6 py-3 text-sm font-semibold text-sky-200 transition hover:border-sky-200"
+                  className="rounded-full border border-sky-200/70 px-6 py-3 text-sm font-semibold text-sky-200 opacity-85 transition hover:border-sky-200"
                 >
-                  Iniciar sesión
+                  Acceder
                 </a>
               )}
               {hasSession && (

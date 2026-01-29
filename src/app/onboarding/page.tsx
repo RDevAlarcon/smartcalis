@@ -149,13 +149,21 @@ export default function OnboardingPage() {
       <div className="absolute inset-0 bg-slate-950/70" />
       <div className="container relative py-12 space-y-6 text-slate-100">
         <div className="rounded-xl border border-sky-200/60 bg-slate-950/35 p-6 text-slate-100 space-y-6">
-          <div>
-            <h1 className="text-2xl font-semibold text-sky-200">
-              Inicio guiado
-            </h1>
-            <p className="text-sm text-sky-200">
-              Completa tus datos y generamos el plan semanal automáticamente.
-            </p>
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <h1 className="text-2xl font-semibold text-sky-200">
+                Inicio guiado
+              </h1>
+              <p className="text-sm text-sky-200">
+                Completa tus datos y generamos el plan semanal automáticamente.
+              </p>
+            </div>
+            <a
+              href="/"
+              className="rounded-full border border-slate-200/70 px-4 py-2 text-sm font-semibold text-sky-200 transition hover:border-slate-100"
+            >
+              Ir al home
+            </a>
           </div>
 
           <form className="space-y-6" onSubmit={handleSubmit}>
