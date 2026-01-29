@@ -8,7 +8,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "PrimeRep",
+  title: "SmartCalis",
   description: "Entrena con criterio. Progresa con control.",
 };
 

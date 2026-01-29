@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 import crypto from "node:crypto";
 
 const encoder = new TextEncoder();
-const cookieName = "primerep_session";
+const cookieName = "smartcalis_session";
 
 function getJwtSecret() {
   const secret = process.env.JWT_SECRET;

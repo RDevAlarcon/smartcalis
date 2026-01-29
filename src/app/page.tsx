@@ -12,7 +12,7 @@ export default async function Home() {
         <div className="container relative py-20 text-slate-100">
           <div className="max-w-2xl space-y-6 rounded-3xl p-8">
             <p className="text-sm uppercase tracking-[0.35em] text-sky-200">
-              PrimeRep
+              SmartCalis
             </p>
             <h1 className="text-4xl font-semibold leading-tight text-[#e5e7eb] md:text-5xl">
               Entrena con criterio. Progresa con control.
@@ -81,7 +81,7 @@ export default async function Home() {
               Diseñado para entrenar bien hoy y seguir entrenando mañana.
             </h2>
             <p className="text-sm text-slate-600">
-              PrimeRep adapta volumen, descanso y selección de ejercicios según
+              SmartCalis adapta volumen, descanso y selección de ejercicios según
               tu contexto real. La meta no es acumular, es sostener progreso con
               control.
             </p>

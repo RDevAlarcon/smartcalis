@@ -1,7 +1,7 @@
-# PrimeRep
+# SmartCalis
 Entrena con criterio. Progresa con control.
 
-PrimeRep es una plataforma de calistenia con progresión real, diseñada para todas las edades con foco técnico y longevidad para usuarios +40 sin excluir a usuarios -40.
+SmartCalis es una plataforma de calistenia con progresión real, diseñada para todas las edades con foco técnico y longevidad para usuarios +40 sin excluir a usuarios -40.
 
 ## Stack
 - Next.js (App Router) + TypeScript estricto
