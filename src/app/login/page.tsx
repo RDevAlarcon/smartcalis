@@ -29,9 +29,15 @@ export default function LoginPage() {
     if (res.ok) {
       setStatus("Sesión iniciada.");
       setTimeout(() => router.push("/dashboard"), 400);
-    } else {
-      setStatus("Credenciales inválidas.");
+      return;
     }
+
+    if (res.status === 401) {
+      setStatus("Credenciales inválidas.");
+      return;
+    }
+
+    setStatus("No se pudo iniciar sesión.");
   }
 
   return (
@@ -86,6 +92,12 @@ export default function LoginPage() {
               {loading ? "Ingresando..." : "Entrar"}
             </button>
           </div>
+          <p className="text-sm text-slate-600">
+            ¿No tienes cuenta?{" "}
+            <a href="/onboarding" className="font-semibold text-slate-900">
+              Regístrate
+            </a>
+          </p>
         </form>
 
         {status && <p className="text-sm text-slate-600">{status}</p>}

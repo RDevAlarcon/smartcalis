@@ -1,11 +1,29 @@
 import { getUserIdFromRequest } from "@/lib/auth";
+import Script from "next/script";
 
 export default async function Home() {
   const userId = await getUserIdFromRequest();
   const hasSession = Boolean(userId);
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://smartcalis.com";
+  const description =
+    "Entrena con criterio. Progresa con control. Plataforma de calistenia con progresión real, foco técnico y longevidad.";
 
   return (
     <main className="relative min-h-screen overflow-hidden">
+      <Script
+        id="smartcalis-ld-json"
+        type="application/ld+json"
+        strategy="afterInteractive"
+      >
+        {JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          name: "SmartCalis",
+          url: siteUrl,
+          description,
+          inLanguage: "es-ES",
+        })}
+      </Script>
       <div className="absolute inset-0 bg-[url('/imagen1.png')] bg-cover bg-no-repeat bg-[position:70%_10%]" />
       <div className="absolute inset-0 bg-slate-950/35" />
       <section className="relative min-h-[420px] md:min-h-[560px]">
