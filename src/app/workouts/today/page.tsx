@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useRef, useState } from "react";
 import { getOffsets } from "@/lib/schedule";
@@ -69,7 +69,6 @@ export default function TodayWorkoutPage() {
           return;
         }
 
-        const today = new Date();
         const grouped = workouts.reduce<Record<number, Workout[]>>(
           (acc, item) => {
             const key = item.weekIndex ?? 0;
@@ -186,6 +185,13 @@ export default function TodayWorkoutPage() {
     return `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
   }
 
+  function splitReason(reason: string) {
+    const match = reason.match(/\(([^)]+)\)/);
+    const bodyFocus = match?.[1] ?? null;
+    const text = reason.replace(/\s*\([^)]*\)/, "").trim();
+    return { text, bodyFocus };
+  }
+
   return (
     <main className="relative min-h-screen overflow-hidden">
       <div className="fixed inset-0 -z-10 bg-[url('/imagen1.png')] bg-cover bg-no-repeat bg-center" />
@@ -243,79 +249,91 @@ export default function TodayWorkoutPage() {
               const isDone = done >= item.sets;
               const rest = restRemaining[item.id] ?? 0;
               return (
-              <div
-                key={item.id}
-                className="rounded-xl border border-sky-200/60 p-4"
-              >
-                <div className="flex items-center gap-4">
-                  <div className="flex h-36 w-36 items-center justify-center rounded-lg bg-slate-50">
-                    <img
-                      src={item.exercise.thumbnail}
-                      alt={item.exercise.name}
-                      className="h-32 w-32 object-contain"
-                      loading="lazy"
-                    />
+                <div
+                  key={item.id}
+                  className="rounded-xl border border-sky-200/60 p-4"
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="flex h-36 w-36 items-center justify-center rounded-lg bg-slate-50">
+                      <img
+                        src={item.exercise.thumbnail}
+                        alt={item.exercise.name}
+                        className="h-32 w-32 object-contain"
+                        loading="lazy"
+                      />
+                    </div>
+                    <div>
+                      <p className={`text-sm ${panelText}`}>
+                        Ejercicio {index + 1}
+                      </p>
+                      <h3 className="text-lg font-semibold text-gray-200">
+                        {item.exercise.name}
+                      </h3>
+                      {(() => {
+                        const { text, bodyFocus } = splitReason(item.reason);
+                        return (
+                          <div className="mt-1 space-y-2">
+                            <p className={`text-xs ${panelText}`}>{text}</p>
+                            {bodyFocus ? (
+                              <span className="inline-flex w-fit rounded-full border border-sky-200/60 px-2 py-0.5 text-[11px] font-semibold text-sky-200">
+                                Foco: {bodyFocus}
+                              </span>
+                            ) : null}
+                          </div>
+                        );
+                      })()}
+                    </div>
                   </div>
-                  <div>
-                    <p className={`text-sm ${panelText}`}>
-                      Ejercicio {index + 1}
-                    </p>
-                    <h3 className="text-lg font-semibold text-gray-200">
-                      {item.exercise.name}
-                    </h3>
-                    <p className={`text-xs ${panelText}`}>{item.reason}</p>
+                  <div className="mt-4 grid gap-3 md:grid-cols-3">
+                    <div className="rounded-lg bg-slate-50 p-3 text-sm text-slate-600">
+                      {item.sets} series · {item.reps} repeticiones
+                    </div>
+                    <div className="rounded-lg bg-slate-50 p-3 text-sm text-slate-600">
+                      Descanso {item.restSeconds}s
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      {rest > 0 && !isDone ? (
+                        <div className="flex items-center justify-between rounded-lg border border-red-400/70 bg-black/60 px-3 py-2 text-sm text-red-200">
+                          <span className="uppercase tracking-[0.2em] text-red-200/80">
+                            Descanso
+                          </span>
+                          <span className="font-mono text-lg font-semibold tracking-[0.18em] text-red-400">
+                            {formatRest(rest)}
+                          </span>
+                        </div>
+                      ) : null}
+                      <button
+                        disabled={isDone}
+                        onClick={() =>
+                          setCompletedSets((prev) => {
+                            const nextCount = Math.min(
+                              item.sets,
+                              (prev[item.id] ?? 0) + 1,
+                            );
+                            setRestRemaining((restPrev) => ({
+                              ...restPrev,
+                              [item.id]:
+                                nextCount >= item.sets ? 0 : item.restSeconds,
+                            }));
+                            return {
+                              ...prev,
+                              [item.id]: nextCount,
+                            };
+                          })
+                        }
+                        className="rounded-lg bg-teal-600 px-3 py-2 text-sm font-semibold text-white transition hover:bg-teal-500 disabled:cursor-not-allowed disabled:opacity-60"
+                      >
+                        {isDone
+                          ? "Series completas"
+                          : `Completar serie (${done + 1}/${item.sets})`}
+                      </button>
+                    </div>
                   </div>
+                  <p className={`mt-2 text-xs ${panelText}`}>
+                    Series completadas: {done}/{item.sets}
+                  </p>
                 </div>
-                <div className="mt-4 grid gap-3 md:grid-cols-3">
-                  <div className="rounded-lg bg-slate-50 p-3 text-sm text-slate-600">
-                    {item.sets} series · {item.reps} repeticiones
-                  </div>
-                  <div className="rounded-lg bg-slate-50 p-3 text-sm text-slate-600">
-                    Descanso {item.restSeconds}s
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    {rest > 0 && !isDone ? (
-                      <div className="flex items-center justify-between rounded-lg border border-red-400/70 bg-black/60 px-3 py-2 text-sm text-red-200">
-                        <span className="uppercase tracking-[0.2em] text-red-200/80">
-                          Descanso
-                        </span>
-                        <span className="font-mono text-lg font-semibold tracking-[0.18em] text-red-400">
-                          {formatRest(rest)}
-                        </span>
-                      </div>
-                    ) : null}
-                    <button
-                      disabled={isDone}
-                      onClick={() =>
-                        setCompletedSets((prev) => {
-                          const nextCount = Math.min(
-                            item.sets,
-                            (prev[item.id] ?? 0) + 1,
-                          );
-                          setRestRemaining((restPrev) => ({
-                            ...restPrev,
-                            [item.id]:
-                              nextCount >= item.sets ? 0 : item.restSeconds,
-                          }));
-                          return {
-                            ...prev,
-                            [item.id]: nextCount,
-                          };
-                        })
-                      }
-                      className="rounded-lg bg-teal-600 px-3 py-2 text-sm font-semibold text-white transition hover:bg-teal-500 disabled:cursor-not-allowed disabled:opacity-60"
-                    >
-                      {isDone
-                        ? "Series completas"
-                        : `Completar serie (${done + 1}/${item.sets})`}
-                    </button>
-                  </div>
-                </div>
-                <p className={`mt-2 text-xs ${panelText}`}>
-                  Series completadas: {done}/{item.sets}
-                </p>
-              </div>
-            );
+              );
             })}
             <button
               onClick={async () => {
@@ -385,4 +403,3 @@ export default function TodayWorkoutPage() {
     </main>
   );
 }
-

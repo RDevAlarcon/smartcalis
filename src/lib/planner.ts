@@ -1,4 +1,4 @@
-﻿import type { Exercise, Profile } from "@/db/schema";
+import type { Exercise, Profile } from "@/db/schema";
 import { patternLabels } from "@/lib/labels";
 import type { AgeBand, Goal, Level, Pattern } from "@/lib/types";
 
@@ -99,6 +99,59 @@ function pickExercises(pool: Exercise[], count: number) {
   return shuffled.slice(0, count);
 }
 
+function getBodyFocus(exercise: Exercise) {
+  const name = exercise.name.toLowerCase();
+  if (exercise.pattern === "PUSH") {
+    if (name.includes("pike") || name.includes("handstand")) {
+      return "hombros y tríceps";
+    }
+    if (name.includes("dip")) {
+      return "tríceps y pecho";
+    }
+    if (name.includes("push-up") || name.includes("push up")) {
+      return "pecho, tríceps y hombros";
+    }
+    return "empuje y estabilización";
+  }
+  if (exercise.pattern === "PULL") {
+    if (name.includes("row")) return "espalda media y bíceps";
+    if (name.includes("pull-up") || name.includes("pull up") || name.includes("chin")) {
+      return "dorsales y bíceps";
+    }
+    return "tracción y escápulas";
+  }
+  if (exercise.pattern === "LEGS") {
+    if (name.includes("lunge") || name.includes("split")) {
+      return "glúteos y cuádriceps";
+    }
+    if (name.includes("rdl") || name.includes("hip") || name.includes("bridge")) {
+      return "glúteos e isquiotibiales";
+    }
+    if (name.includes("calf")) return "pantorrillas";
+    return "piernas y cadera";
+  }
+  if (exercise.pattern === "CORE") {
+    if (name.includes("side")) return "oblicuos y core";
+    if (name.includes("leg raise")) return "abdominales e iliopsoas";
+    return "zona media y estabilidad";
+  }
+  if (exercise.pattern === "MOBILITY") {
+    if (name.includes("wrist")) return "movilidad de muñeca";
+    if (name.includes("shoulder")) return "movilidad de hombro";
+    if (name.includes("hip")) return "movilidad de cadera";
+    if (name.includes("ankle")) return "movilidad de tobillo";
+    return "movilidad general";
+  }
+  if (exercise.pattern === "SKILL") {
+    if (name.includes("handstand")) return "hombros, core y equilibrio";
+    if (name.includes("front lever") || name.includes("back lever")) {
+      return "espalda y core";
+    }
+    return "técnica y control corporal";
+  }
+  return "control general";
+}
+
 function estimateMinutes(items: PlanItem[]) {
   return items.reduce((total, item) => {
     const repRange = item.reps.match(/\d+/g)?.map(Number) ?? [8];
@@ -153,7 +206,8 @@ export function generatePlan({
       const baseSets = Math.min(goalConfig.sets, ageConfig.maxSets);
       const sets = isDeload ? applyDeload(baseSets) : baseSets;
       const rest = goalConfig.restSeconds + ageConfig.restBonus;
-      const reason = `Elegido para reforzar ${patternLabels[exercise.pattern]} sin sobrecargar zonas sensibles.`;
+      const bodyFocus = getBodyFocus(exercise);
+      const reason = `Elegido para reforzar ${patternLabels[exercise.pattern]} (${bodyFocus}) sin sobrecargar zonas sensibles.`;
 
       return {
         exerciseId: exercise.id,
@@ -179,5 +233,3 @@ export function generatePlan({
 
   return { weekIndex, days };
 }
-
-

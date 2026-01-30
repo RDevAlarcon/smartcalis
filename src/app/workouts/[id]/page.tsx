@@ -24,6 +24,13 @@ type Workout = {
   items: WorkoutItem[];
 };
 
+function splitReason(reason: string) {
+  const match = reason.match(/\(([^)]+)\)/);
+  const bodyFocus = match?.[1] ?? null;
+  const text = reason.replace(/\s*\([^)]*\)/, "").trim();
+  return { text, bodyFocus };
+}
+
 export default function WorkoutDetailPage() {
   const params = useParams<{ id: string }>();
   const router = useRouter();
@@ -111,7 +118,19 @@ export default function WorkoutDetailPage() {
                         <h3 className="text-lg font-semibold text-gray-200">
                           {item.exercise.name}
                         </h3>
-                        <p className="text-xs text-sky-200">{item.reason}</p>
+                        {(() => {
+                          const { text, bodyFocus } = splitReason(item.reason);
+                          return (
+                            <div className="mt-1 space-y-2">
+                              <p className="text-xs text-sky-200">{text}</p>
+                              {bodyFocus ? (
+                                <span className="inline-flex w-fit rounded-full border border-sky-200/60 px-2 py-0.5 text-[11px] font-semibold text-sky-200">
+                                  Foco: {bodyFocus}
+                                </span>
+                              ) : null}
+                            </div>
+                          );
+                        })()}
                       </div>
                     </div>
                     <div className="mt-4 flex flex-wrap gap-3 text-sm text-slate-200">
