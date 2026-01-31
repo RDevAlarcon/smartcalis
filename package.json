@@ -13,6 +13,9 @@
     "seed": "tsx scripts/seed.ts"
   },
   "dependencies": {
+    "@capacitor/android": "^8.0.2",
+    "@capacitor/cli": "^8.0.2",
+    "@capacitor/core": "^8.0.2",
     "dotenv": "^17.2.3",
     "drizzle-orm": "^0.45.1",
     "jose": "^6.1.3",

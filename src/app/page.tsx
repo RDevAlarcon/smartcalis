@@ -104,9 +104,10 @@ export default async function Home() {
               control.
             </p>
             <ul className="space-y-3 text-sm text-slate-600">
-              <li>• Deload automático cada 4 semanas cuando corresponde.</li>
+              <li>• Semana de recuperación cada 4 semanas.</li>
               <li>• Ajustes por dolor reportado y restricciones.</li>
-              <li>• Copy técnico que guía sin exageraciones.</li>
+              <li>• Indicaciones técnicas claras y concretas.</li>
+              <li>• Guía técnica precisa, sin exageraciones.</li>
             </ul>
           </div>
           {hasSession && (
